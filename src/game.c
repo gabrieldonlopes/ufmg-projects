@@ -33,8 +33,8 @@ void check_battle_result(Pokemon *p1, Pokemon *p2){
     else if(check_type_advantage(*p1,*p2)==-1) 
         attack_mod = 0.8;
 
-    if(p1->attack > p2->defense)
-        p2->hp -= (p1->attack*attack_mod)  - p2->defense;
+    if(p1->attack*attack_mod > p2->defense)
+        p2->hp -= p1->attack*attack_mod - p2->defense;
     else
         p2->hp -= 1.0;
     
@@ -46,45 +46,47 @@ void simulate_battle(
     int p1_pokemon_quant,
     int p2_pokemon_quant
 ){
-    int i = 0;
-    int c = 0;
+    int p1_index = 0;
+    int p2_index = 0;
+    int attacker_player = 1; // player 1 começa atacando
 
-    while (i < p1_pokemon_quant && c < p2_pokemon_quant){
+    while (p1_index < p1_pokemon_quant && p2_index < p2_pokemon_quant){
+        Pokemon *attacker;
+        Pokemon *defender;
 
-        // P1 ataca P2
-        check_battle_result(&p1_pokemon_list[i], &p2_pokemon_list[c]);
-
-        if (p2_pokemon_list[c].hp <= 0){
-            printf("%s venceu %s\n",
-                p1_pokemon_list[i].name,
-                p2_pokemon_list[c].name
-            );
-
-            c++;
-
-            // evita contra-ataque de pokemon morto
-            if (c >= p2_pokemon_quant)
-                break;
+        // quando o pokemon do p2 perde 
+        if (attacker_player == 1){ 
+            attacker = &p1_pokemon_list[p1_index];
+            defender = &p2_pokemon_list[p2_index];
+        }
+        else{
+            attacker = &p2_pokemon_list[p2_index];
+            defender = &p1_pokemon_list[p1_index];
         }
 
-        // P2 ataca P1
-        check_battle_result(&p2_pokemon_list[c], &p1_pokemon_list[i]);
-
-        if (p1_pokemon_list[i].hp <= 0){
-            printf("%s venceu %s\n",
-                p2_pokemon_list[c].name,
-                p1_pokemon_list[i].name
+        check_battle_result(attacker, defender);
+        if (defender->hp <= 0){
+            printf(
+                "%s venceu %s\n",
+                attacker->name,
+                defender->name
             );
 
-            i++;
-
-            // evita contra-ataque de pokemon morto
-            if (c >= p2_pokemon_quant)
-                break;
+            if (attacker_player == 1){
+                p2_index++;
+                attacker_player = 0;
+            }
+            else{
+                p1_index++;
+                attacker_player = 1;
+            }
+        }
+        else{
+            attacker_player = !attacker_player; // inverte o atacante caso o golpe não seja fatal
         }
     }
 
-    if (i >= p1_pokemon_quant)
+    if (p1_index >= p1_pokemon_quant)
         printf("Jogador 2 venceu!\n");
     else
         printf("Jogador 1 venceu!\n");

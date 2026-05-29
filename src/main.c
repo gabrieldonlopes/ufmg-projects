@@ -19,7 +19,7 @@ int main(){
         &p2_pokemons_quant,
         p1_pokemons,
         p2_pokemons)){
-        printf("erro abrir e carregar dados!");
+        printf("erro abrir e carregar dados!\n");
         return 1;
     }
 
