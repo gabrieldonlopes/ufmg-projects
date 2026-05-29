@@ -1,7 +1,22 @@
 #include "game.h"
+/* 
+--------------------------------------------------------
+# game.c
+#
+# Description: funções para simulação de batalha
+# Autor: gdon - gabriellopes.zip@gmail.com
+# Version: 1.0
+# Data: 
+--------------------------------------------------------
+*/
 
 // nota: talvez exista uma abordagem forma melhor utilizando os inteiros
 // associados aos enums
+/*
+    1=ataques com vantagem
+   -1=ataques com desvantagem
+    0=ataques normais
+*/
 int check_type_advantage(Pokemon p1, Pokemon p2){
     switch (p1.type){
         case ELETRIC:
@@ -26,30 +41,28 @@ int check_type_advantage(Pokemon p1, Pokemon p2){
             else return 0;        
     }
 }
-/*
-    1=ataques com vantagem
-   -1=ataques com desvantagem
-    0=ataques normais
-*/
 
-void check_battle_result(Pokemon *p1, Pokemon *p2){
+/* 
+    nota: no jogo orignal ataque super efetivos dão o 200% de dado
+    ataques pouco efetivos dão 50% de dano
+*/
+void check_battle_result(Pokemon *attacker, Pokemon *deffender){
     float attack_mod = 1.0;
 
-    if (check_type_advantage(*p1, *p2)==1) 
+    if (check_type_advantage(*attacker, *deffender)==1) 
         attack_mod = 1.2;
-    else if(check_type_advantage(*p1,*p2)==-1) 
+    else if(check_type_advantage(*attacker,*deffender)==-1) 
         attack_mod = 0.8;
 
-    if(p1->attack*attack_mod > p2->defense)
-        p2->hp -= p1->attack*attack_mod - p2->defense;
+    if(attacker->attack*attack_mod > deffender->defense)
+        deffender->hp -= attacker->attack*attack_mod - deffender->defense;
     else
-        p2->hp -= 1.0;
-    
+        deffender->hp -= 1.0;
 }
 
 void check_surviving_pokemons(Pokemon p_pokemon_list[MAX_POKEMONS],int p_pokemon_quant,pokemon_list *surviving_pokemon){
     for (int i = 0; i < p_pokemon_quant; i++){
-        if(p_pokemon_list[i].hp > 0)
+        if(p_pokemon_list[i].hp > 0) // adicionando na lista pokemons que não foram desmaiados (mortos)
             append_pokemon(surviving_pokemon, p_pokemon_list[i].name);
     }
 }
@@ -77,13 +90,14 @@ void simulate_battle(
         if (attacker_player == 1){ 
             attacker = &p1_pokemon_list[p1_index];
             defender = &p2_pokemon_list[p2_index];
-        }
-        else{
+        } else {
             attacker = &p2_pokemon_list[p2_index];
             defender = &p1_pokemon_list[p1_index];
         }
 
-        check_battle_result(attacker, defender);
+        check_battle_result(attacker, defender); // simulando um turno da batalha
+        
+        // avaliando resultados da batalha
         if (defender->hp <= 0){
             printf(
                 "%s venceu %s\n",
@@ -94,18 +108,15 @@ void simulate_battle(
             // adicionando pokemon na lista dos derrotados
             append_pokemon(defeated_pokemon, defender->name);
 
-            // quando o pokemon é derrotado o próximo a entrar
-            // vai atacar primeiro
+            // quando o pokemon é derrotado o próximo a entrar vai atacar primeiro
             if (attacker_player == 1){
                 p2_index++;
                 attacker_player = 0;
-            }
-            else{
+            } else {
                 p1_index++;
                 attacker_player = 1;
             }
-        }
-        else{
+        } else {
             attacker_player = !attacker_player; // inverte o atacante caso o golpe não seja fatal
         }
     }
@@ -113,8 +124,7 @@ void simulate_battle(
     if (p1_index >= p1_pokemon_quant){
         printf("Jogador 2 venceu\n");
         check_surviving_pokemons(p2_pokemon_list, p2_pokemon_quant, surviving_pokemon);
-    }
-    else{
+    } else {
         printf("Jogador 1 venceu\n");
         check_surviving_pokemons(p1_pokemon_list, p1_pokemon_quant, surviving_pokemon);
     }

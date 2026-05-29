@@ -1,12 +1,21 @@
 #include "file_handler.h"
 
-// todo: adicionar print dos dados lidos
+/* 
+--------------------------------------------------------
+# file_handler.c
+#
+# Description: funções de acesso e leitura arquivo de entrada
+# Autor: gdon - gabriellopes.zip@gmail.com
+# Version: 1.0
+# Data: 
+--------------------------------------------------------
+*/
+
 int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMONS]){
-    // populando vetor com pokemons do jogador
     for (int i = 0; i < pokemon_quant; i++){
         
         // lendo dados do pokemon
-        char name[50];
+        char name[NAME_SIZE];
         int attack, defense, hp;
         char type[20];
         pokemon_type type_enum;
@@ -17,7 +26,13 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
                    &attack,
                    &defense,
                    &hp,
-                   type) != 5) return 1;
+                   type) != 5){
+
+            printf("entrada de dados fora do padrão\n");
+            return 1;
+        }
+        
+        // printando dados lidos
         printf("%s %d %d %d %s\n",
                     name, 
                     attack,
@@ -25,8 +40,7 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
                     hp,
                     type);
         
-        
-        // nota: estou usando strcmp do string.h para facilitar comparações entre strings
+        // transformando a string recebida na enum 
         if (strcmp(type, "fogo") == 0)
             type_enum = FIRE;
         else if (strcmp(type, "gelo") == 0)
@@ -37,10 +51,13 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
             type_enum = WATER;
         else if(strcmp(type,"eletrico") == 0 || strcmp(type,"elétrico") == 0)
             type_enum = ELETRIC;
-        else
+        else{
+            printf("tipo de pokemon inválido\n");
             return 1; // se entrada for diferente do esperado retorna erro
+        }
+            
 
-        
+        // registrando dados na lista 
         strcpy(pokemons_list[i].name, name);
         pokemons_list[i].attack = attack;
         pokemons_list[i].defense = defense;
@@ -50,7 +67,7 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
     return 0;
 }
 
-int read_file(char* file_name,
+FILE* read_file(char* file_name,
               int *p1_pokemon_quant,
               int *p2_pokemon_quant,
               Pokemon p1_pokemons[MAX_POKEMONS],
@@ -58,24 +75,29 @@ int read_file(char* file_name,
     {
 
     FILE *file = fopen(file_name,"r"); 
-    if (file == NULL) return 1; // caso encontre problemas ao abrir arquivo
-
-    // lendo quantidade de pokemons de cada jogador
-    fscanf(file, "%d %d", p1_pokemon_quant, p2_pokemon_quant);
-    printf("%d %d\n", *p1_pokemon_quant, *p2_pokemon_quant);
-
-    // garantindo que dados passados sejam válidos
-    if(*p1_pokemon_quant == 0 || *p2_pokemon_quant == 0) return 1;
-    if(*p1_pokemon_quant > MAX_POKEMONS || *p2_pokemon_quant > MAX_POKEMONS) return 0;
-
-    // carregando pokemons dos players
-    if(load_pokemons(file, *p1_pokemon_quant, p1_pokemons))
-        return 1;
-    if (load_pokemons(file, *p2_pokemon_quant, p2_pokemons)){//
-        return 1;
+    if (file == NULL){
+        printf("Problema ao abrir arquivo\n");
+        fclose(file);
+        return NULL; // caso encontre problemas ao abrir arquivo
     }
 
-    fclose(file);
+    // lendo quantidade de pokemons de cada jogador
+    if(fscanf(file, "%d %d", p1_pokemon_quant, p2_pokemon_quant)!=2){
+        printf("entrada de dados fora do padrão\n");
+        return NULL; 
+    }
 
-    return 0;
+    printf("%d %d\n", *p1_pokemon_quant, *p2_pokemon_quant);
+
+    // garantindo que dados passados sejam válidos (1 ≤ N ≤ 100)
+    if(
+        *p1_pokemon_quant == 0 || *p2_pokemon_quant == 0 ||
+        *p1_pokemon_quant > MAX_POKEMONS || *p2_pokemon_quant > MAX_POKEMONS
+    ){
+        printf("Número de pokemons inválido. a entrada deve estar dentro do intervalo 1 ≤ N ≤ 100 \n");
+        fclose(file);
+        return NULL; // caso encontre problemas ao abrir arquivo
+    }
+    
+    return file;
 }

@@ -1,5 +1,16 @@
 #include "linked_list.h"
 
+/* 
+--------------------------------------------------------
+# linked_list.c
+#
+# Description: funções para manipular array dinâmica 
+#              de pokemons derrotados e sobreviventes
+# Autor: gdon - gabriellopes.zip@gmail.com
+# Version: 1.0
+# Data: 
+--------------------------------------------------------
+*/
 
 
 // função para adicionar um novo valor no final da lista dinâmica
@@ -20,7 +31,7 @@ void append_pokemon(pokemon_list * head, char new_name[50]){
 void print_pokemon_list(pokemon_list *head){
     pokemon_list *current = head;
 
-    while(current!=NULL){
+    while(current!=NULL){ // circulando nodes até chegar num vazio
         printf("%s\n", current->name);
         current = current->next;
     }
