@@ -40,7 +40,7 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
         pokemons_list[i].attack = attack;
         pokemons_list[i].defense = defense;
         pokemons_list[i].hp = hp;
-        pokemons_list[i].type = type;
+        pokemons_list[i].type = type_enum;
     }
 
     return 0;

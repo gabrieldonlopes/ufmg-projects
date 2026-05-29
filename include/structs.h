@@ -1,19 +1,20 @@
-#ifndef STUCTS_H
+#ifndef STRUCTS_H
 #define STRUCTS_H
 
+
 typedef enum {
+    ELETRIC,
+    WATER,
     FIRE,
     ICE,
-    ROCK,
-    ELETRIC,
-    WATER    
+    ROCK    
 } pokemon_type;
 
 typedef struct {
     char name[50];
     int attack;
     int defense;
-    int hp;
+    float hp;
     pokemon_type type;
 } Pokemon;
 
