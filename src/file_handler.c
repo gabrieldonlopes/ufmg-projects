@@ -18,7 +18,14 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
                    &defense,
                    &hp,
                    type) != 5) return 1;
-                   
+        printf("%s %d %d %d %s\n",
+                    name, 
+                    attack,
+                    defense,
+                    hp,
+                    type);
+        
+        
         // nota: estou usando strcmp do string.h para facilitar comparações entre strings
         if (strcmp(type, "fogo") == 0)
             type_enum = FIRE;
@@ -40,7 +47,6 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
         pokemons_list[i].hp = hp;
         pokemons_list[i].type = type_enum;
     }
-
     return 0;
 }
 
@@ -56,6 +62,7 @@ int read_file(char* file_name,
 
     // lendo quantidade de pokemons de cada jogador
     fscanf(file, "%d %d", p1_pokemon_quant, p2_pokemon_quant);
+    printf("%d %d\n", *p1_pokemon_quant, *p2_pokemon_quant);
 
     // garantindo que dados passados sejam válidos
     if(*p1_pokemon_quant == 0 || *p2_pokemon_quant == 0) return 1;

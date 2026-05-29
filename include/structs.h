@@ -1,7 +1,6 @@
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-
 typedef enum {
     ELETRIC,
     WATER,
@@ -17,5 +16,12 @@ typedef struct {
     float hp;
     pokemon_type type;
 } Pokemon;
+
+// construindo uma linked list para guardar dados 
+// dos pokemons derrotados e sobreviventes
+typedef struct node{
+    char name[50];
+    struct node *next;
+} pokemon_names;
 
 #endif

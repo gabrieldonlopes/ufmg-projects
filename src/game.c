@@ -1,5 +1,7 @@
 #include "game.h"
 
+// nota: talvez exista uma abordagem forma melhor utilizando os inteiros
+// associados aos enums
 int check_type_advantage(Pokemon p1, Pokemon p2){
     switch (p1.type){
         case ELETRIC:
@@ -24,6 +26,11 @@ int check_type_advantage(Pokemon p1, Pokemon p2){
             else return 0;        
     }
 }
+/*
+    1=ataques com vantagem
+   -1=ataques com desvantagem
+    0=ataques normais
+*/
 
 void check_battle_result(Pokemon *p1, Pokemon *p2){
     float attack_mod = 1.0;
@@ -40,21 +47,33 @@ void check_battle_result(Pokemon *p1, Pokemon *p2){
     
 }
 
+void check_surviving_pokemons(Pokemon p_pokemon_list[MAX_POKEMONS],int p_pokemon_quant,pokemon_list *surviving_pokemon){
+    for (int i = 0; i < p_pokemon_quant; i++){
+        if(p_pokemon_list[i].hp > 0)
+            append_pokemon(surviving_pokemon, p_pokemon_list[i].name);
+    }
+}
+
 void simulate_battle(
     Pokemon p1_pokemon_list[MAX_POKEMONS],
     Pokemon p2_pokemon_list[MAX_POKEMONS],
     int p1_pokemon_quant,
-    int p2_pokemon_quant
+    int p2_pokemon_quant,
+    pokemon_list *defeated_pokemon,
+    pokemon_list *surviving_pokemon
 ){
-    int p1_index = 0;
-    int p2_index = 0;
+    int p1_index = 0, p2_index = 0;
     int attacker_player = 1; // player 1 começa atacando
 
+    printf("\n"); // pulando uma linha para separar saídas
+
+    // loop até o index alcançar a quantidade de pokemons, ou seja todos pokemons
+    // de um jogador forem derrotados
     while (p1_index < p1_pokemon_quant && p2_index < p2_pokemon_quant){
         Pokemon *attacker;
         Pokemon *defender;
 
-        // quando o pokemon do p2 perde 
+        // determinando quem vai atacar baseado no turmo
         if (attacker_player == 1){ 
             attacker = &p1_pokemon_list[p1_index];
             defender = &p2_pokemon_list[p2_index];
@@ -72,6 +91,11 @@ void simulate_battle(
                 defender->name
             );
 
+            // adicionando pokemon na lista dos derrotados
+            append_pokemon(defeated_pokemon, defender->name);
+
+            // quando o pokemon é derrotado o próximo a entrar
+            // vai atacar primeiro
             if (attacker_player == 1){
                 p2_index++;
                 attacker_player = 0;
@@ -85,9 +109,13 @@ void simulate_battle(
             attacker_player = !attacker_player; // inverte o atacante caso o golpe não seja fatal
         }
     }
-
-    if (p1_index >= p1_pokemon_quant)
-        printf("Jogador 2 venceu!\n");
-    else
-        printf("Jogador 1 venceu!\n");
+    
+    if (p1_index >= p1_pokemon_quant){
+        printf("Jogador 2 venceu\n");
+        check_surviving_pokemons(p2_pokemon_list, p2_pokemon_quant, surviving_pokemon);
+    }
+    else{
+        printf("Jogador 1 venceu\n");
+        check_surviving_pokemons(p1_pokemon_list, p1_pokemon_quant, surviving_pokemon);
+    }
 }
