@@ -34,6 +34,14 @@ int main(){
     pokemon_names *surviving_pokemon = (pokemon_names *) malloc(sizeof(pokemon_names));
     surviving_pokemon->next = NULL;
 
+    /*
+        nota: aqui estou inicializando a linked list com um valor de name vazio no primeiro nó
+        (dummy node) isso não é o ideal e pode dar problemas, adaptei a função de print para garantir que pule
+        o primeiro nó (evitando printar lixo de memória).
+
+        é uma gambiarra que funcionou por aqui kkkkkkkk
+    */
+
     // index de cada lista
     int p1_pokemons_quant;
     int p2_pokemons_quant;
@@ -71,11 +79,11 @@ int main(){
     );
 
     printf("\n");
-    printf("Pokémons sobreviventes:");
+    printf("Pokémons sobreviventes:\n");
     print_pokemon_list(surviving_pokemon);
 
     printf("\n");
-    printf("Pokémons derrotados:");
+    printf("Pokémons derrotados:\n");
     print_pokemon_list(defeated_pokemon);
 
     // liberando lista de pokemons

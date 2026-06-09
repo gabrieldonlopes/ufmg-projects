@@ -29,7 +29,7 @@ void append_pokemon(pokemon_names * head, char new_name[NAME_SIZE]){
 }
 
 void print_pokemon_list(pokemon_names *head){
-    pokemon_names *current = head;
+    pokemon_names *current = head->next; // pulando primeiro elemento nulo, pra lixo
 
     while(current!=NULL){ // circulando nodes até chegar num vazio
         printf("%s\n", current->name);
