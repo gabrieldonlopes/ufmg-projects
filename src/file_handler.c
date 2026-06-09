@@ -17,7 +17,7 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
         // lendo dados do pokemon
         char name[NAME_SIZE];
         int attack, defense, hp;
-        char type[20];
+        char type[20]; // hardcodando o tamanho da string de tipo. não é uma boa prática, mas cumpre seu papel aqui
         pokemon_type type_enum;
 
         // testando se a entrada do fscanf está correta
@@ -26,7 +26,7 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
                    &attack,
                    &defense,
                    &hp,
-                   type) != 5){
+                   type) != 5){ // o valor de 5 é para garantir que entrada esteja de acordo com padrão
 
             printf("entrada de dados fora do padrão\n");
             return 1;
@@ -69,9 +69,7 @@ int load_pokemons(FILE *file,int pokemon_quant, Pokemon pokemons_list[MAX_POKEMO
 
 FILE* read_file(char* file_name,
               int *p1_pokemon_quant,
-              int *p2_pokemon_quant,
-              Pokemon p1_pokemons[MAX_POKEMONS],
-              Pokemon p2_pokemons[MAX_POKEMONS])
+              int *p2_pokemon_quant)
     {
 
     FILE *file = fopen(file_name,"r"); 

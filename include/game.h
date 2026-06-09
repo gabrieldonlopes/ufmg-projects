@@ -12,7 +12,7 @@ void simulate_battle(
     Pokemon p2_pokemon_list[MAX_POKEMONS],
     int p1_pokemon_quant,
     int p2_pokemon_quant,
-    pokemon_list *defeated_pokemon,
-    pokemon_list *surviving_pokemon);
+    pokemon_names *defeated_pokemon,
+    pokemon_names *surviving_pokemon);
 
 #endif

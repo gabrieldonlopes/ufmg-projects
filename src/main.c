@@ -29,9 +29,9 @@ int main(){
     Pokemon p2_pokemons[MAX_POKEMONS];
     
     // listas dinâmicas para guardar pokemons derrotados e sobreviventes
-    pokemon_list *defeated_pokemon = (pokemon_list *) malloc(sizeof(pokemon_list));
+    pokemon_names *defeated_pokemon = (pokemon_names *) malloc(sizeof(pokemon_names));
     defeated_pokemon->next = NULL;
-    pokemon_list *surviving_pokemon = (pokemon_list *) malloc(sizeof(pokemon_list));
+    pokemon_names *surviving_pokemon = (pokemon_names *) malloc(sizeof(pokemon_names));
     surviving_pokemon->next = NULL;
 
     // index de cada lista
@@ -42,9 +42,7 @@ int main(){
     FILE *file = (read_file(
         "test.txt",
         &p1_pokemons_quant,
-        &p2_pokemons_quant,
-        p1_pokemons,
-        p2_pokemons));
+        &p2_pokemons_quant));
     if(file == NULL){
         fclose(file);
         return 1;       

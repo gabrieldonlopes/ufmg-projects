@@ -38,7 +38,9 @@ int check_type_advantage(Pokemon p1, Pokemon p2){
         case ROCK:
             if (p2.type == ELETRIC) return 1;
             else if (p2.type == ICE) return -1;
-            else return 0;        
+            else return 0;     
+        default:
+            return 0;
     }
 }
 
@@ -60,7 +62,7 @@ void check_battle_result(Pokemon *attacker, Pokemon *deffender){
         deffender->hp -= 1.0;
 }
 
-void check_surviving_pokemons(Pokemon p_pokemon_list[MAX_POKEMONS],int p_pokemon_quant,pokemon_list *surviving_pokemon){
+void check_surviving_pokemons(Pokemon p_pokemon_list[MAX_POKEMONS],int p_pokemon_quant,pokemon_names *surviving_pokemon){
     for (int i = 0; i < p_pokemon_quant; i++){
         if(p_pokemon_list[i].hp > 0) // adicionando na lista pokemons que não foram desmaiados (mortos)
             append_pokemon(surviving_pokemon, p_pokemon_list[i].name);
@@ -72,8 +74,8 @@ void simulate_battle(
     Pokemon p2_pokemon_list[MAX_POKEMONS],
     int p1_pokemon_quant,
     int p2_pokemon_quant,
-    pokemon_list *defeated_pokemon,
-    pokemon_list *surviving_pokemon
+    pokemon_names *defeated_pokemon,
+    pokemon_names *surviving_pokemon
 ){
     int p1_index = 0, p2_index = 0;
     int attacker_player = 1; // player 1 começa atacando
